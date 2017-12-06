@@ -3,7 +3,10 @@ package com.example.tat.videoapplication.injection.module;
 import android.app.Application;
 import android.content.Context;
 
+import com.example.tat.videoapplication.data.remote.VideoService;
 import com.example.tat.videoapplication.injection.ApplicationContext;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -25,5 +28,11 @@ public class ApplicationModule {
     @ApplicationContext
     Context provideContext() {
         return mApplication;
+    }
+
+    @Provides
+    @Singleton
+    VideoService provideVideoService() {
+        return VideoService.Creator.create();
     }
 }

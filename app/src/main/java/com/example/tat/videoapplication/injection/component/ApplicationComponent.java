@@ -3,6 +3,7 @@ package com.example.tat.videoapplication.injection.component;
 import android.app.Application;
 import android.content.Context;
 
+import com.example.tat.videoapplication.data.DataManager;
 import com.example.tat.videoapplication.injection.ApplicationContext;
 import com.example.tat.videoapplication.injection.module.ApplicationModule;
 
@@ -16,4 +17,5 @@ public interface ApplicationComponent {
     @ApplicationContext
     Context context();
     Application application();
+    DataManager dataManager();
 }
