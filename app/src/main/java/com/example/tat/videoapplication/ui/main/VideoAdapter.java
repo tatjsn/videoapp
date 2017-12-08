@@ -4,8 +4,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.tat.videoapplication.R;
 import com.example.tat.videoapplication.data.model.Video;
 
@@ -39,6 +41,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     @Override
     public void onBindViewHolder(VideoViewHolder holder, int position) {
         Video video = mVideos.get(position);
+        Glide.with(holder.thumbnail)
+                .load(video.thumbnailUrl())
+                .into(holder.thumbnail);
         holder.title.setText(video.title());
         holder.presenterName.setText(video.presenterName());
     }
@@ -49,8 +54,12 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     }
 
     static class VideoViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.thumbnail)
+        ImageView thumbnail;
+
         @BindView(R.id.title)
         TextView title;
+
         @BindView(R.id.presenterName)
         TextView presenterName;
 

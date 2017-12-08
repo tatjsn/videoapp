@@ -1,6 +1,7 @@
 package com.example.tat.videoapplication.ui.main;
 
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -32,8 +33,11 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mVideoListView.setAdapter(mVideoAdapter);
-        mVideoListView.setLayoutManager(new LinearLayoutManager(this));
+        mVideoListView.setLayoutManager(layoutManager);
+        mVideoListView.addItemDecoration(
+                new DividerItemDecoration(this, layoutManager.getOrientation()));
         mMainPresenter.attachView(this);
         mMainPresenter.loadVideos();
     }
