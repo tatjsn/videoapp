@@ -1,5 +1,6 @@
 package com.example.tat.videoapplication.ui.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,7 @@ import com.example.tat.videoapplication.R;
 import com.example.tat.videoapplication.data.model.Video;
 import com.example.tat.videoapplication.injection.component.ActivityComponent;
 import com.example.tat.videoapplication.ui.base.BaseActivity;
+import com.example.tat.videoapplication.ui.player.PlayerActivity;
 
 import java.util.Collections;
 import java.util.List;
@@ -77,5 +79,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     public void showError() {
         Log.d("tatdbg", "videos error");
+    }
+
+    @Override
+    public void playVideo(String videoUrl) {
+        startActivity(new Intent(this, PlayerActivity.class));
     }
 }

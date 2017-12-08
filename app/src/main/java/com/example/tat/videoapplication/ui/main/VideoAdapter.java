@@ -35,7 +35,12 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     public VideoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.video_item, parent, false);
-        return new VideoViewHolder(itemView);
+        VideoViewHolder viewHolder = new VideoViewHolder(itemView);
+        itemView.setOnClickListener(view -> {
+            MainMvpView mvpView = (MainMvpView) view.getContext();
+            mvpView.playVideo(viewHolder.videoUrl);
+        });
+        return viewHolder;
     }
 
     @Override
@@ -46,6 +51,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 .into(holder.thumbnail);
         holder.title.setText(video.title());
         holder.presenterName.setText(video.presenterName());
+        holder.videoUrl = video.videoUrl();
     }
 
     @Override
@@ -62,6 +68,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
         @BindView(R.id.presenterName)
         TextView presenterName;
+
+        String videoUrl;
 
         VideoViewHolder(View itemView) {
             super(itemView);
