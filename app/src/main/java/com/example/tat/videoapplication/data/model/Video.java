@@ -1,12 +1,14 @@
 package com.example.tat.videoapplication.data.model;
 
+import android.os.Parcelable;
+
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 
 @AutoValue
-public abstract class Video {
+public abstract class Video implements Parcelable {
     public abstract String title();
     @SerializedName("presenter_name")
     public abstract String presenterName();

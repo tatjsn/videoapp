@@ -82,7 +82,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     }
 
     @Override
-    public void playVideo(String videoUrl) {
-        startActivity(new Intent(this, PlayerActivity.class));
+    public void playVideo(Video video) {
+        Intent intent = new Intent(this, PlayerActivity.class);
+        intent.putExtra("video", video);
+        startActivity(intent);
     }
 }

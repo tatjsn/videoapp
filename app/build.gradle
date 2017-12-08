@@ -72,4 +72,5 @@ dependencies {
     compileOnly 'com.ryanharter.auto.value:auto-value-gson:0.6.0'
     annotationProcessor 'com.google.auto.value:auto-value:1.5.1'
     annotationProcessor 'com.ryanharter.auto.value:auto-value-gson:0.6.0'
+    annotationProcessor 'com.ryanharter.auto.value:auto-value-parcel:0.2.6'
 }

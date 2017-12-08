@@ -9,5 +9,5 @@ public interface MainMvpView extends MvpView {
     void showVideos(List<Video> videos);
     void showVideosEmpty();
     void showError();
-    void playVideo(String videoUrl);
+    void playVideo(Video video);
 }

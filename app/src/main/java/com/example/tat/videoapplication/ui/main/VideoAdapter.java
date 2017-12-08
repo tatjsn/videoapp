@@ -38,7 +38,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         VideoViewHolder viewHolder = new VideoViewHolder(itemView);
         itemView.setOnClickListener(view -> {
             MainMvpView mvpView = (MainMvpView) view.getContext();
-            mvpView.playVideo(viewHolder.videoUrl);
+            mvpView.playVideo(viewHolder.video);
         });
         return viewHolder;
     }
@@ -51,7 +51,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 .into(holder.thumbnail);
         holder.title.setText(video.title());
         holder.presenterName.setText(video.presenterName());
-        holder.videoUrl = video.videoUrl();
+        holder.video = video;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         @BindView(R.id.presenterName)
         TextView presenterName;
 
-        String videoUrl;
+        Video video;
 
         VideoViewHolder(View itemView) {
             super(itemView);

@@ -1,15 +1,16 @@
 package com.example.tat.videoapplication.ui.player;
 
 import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.example.tat.videoapplication.R;
+import com.example.tat.videoapplication.data.model.Video;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -29,6 +30,8 @@ public class PlayerActivity extends AppCompatActivity {
     private long playbackPosition;
     private int currentWindow;
     private boolean playWhenReady;
+    private Video video;
+    private boolean isSystemUiHidden;
 
     @BindView(R.id.video_view)
     SimpleExoPlayerView playerView;
@@ -38,6 +41,7 @@ public class PlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
         ButterKnife.bind(this);
+        video = getIntent().getParcelableExtra("video");
     }
 
     @Override
@@ -51,7 +55,7 @@ public class PlayerActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        hideSystemUi();
+        updateSystemUi(getResources().getConfiguration());
         if ((Build.VERSION.SDK_INT <= 23 || player == null)) {
             initializePlayer();
         }
@@ -74,6 +78,9 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     private void initializePlayer() {
+        if (video == null) {
+            return;
+        }
         if (player == null) {
             player = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(this),
                     new DefaultTrackSelector(), new DefaultLoadControl());
@@ -81,7 +88,7 @@ public class PlayerActivity extends AppCompatActivity {
             player.setPlayWhenReady(playWhenReady);
             player.seekTo(currentWindow, playbackPosition);
         }
-        MediaSource mediaSource = buildMediaSource(Uri.parse(""));
+        MediaSource mediaSource = buildMediaSource(Uri.parse(video.videoUrl()));
         player.prepare(mediaSource, true, false);
     }
 
@@ -96,17 +103,39 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     private MediaSource buildMediaSource(Uri uri) {
-        return new ExtractorMediaSource(uri, new DefaultHttpDataSourceFactory("videoplayer"),
+        return new ExtractorMediaSource(uri, new DefaultHttpDataSourceFactory("videoapplication"),
                 new DefaultExtractorsFactory(), null, null);
     }
 
     @SuppressLint("InlinedApi")
     private void hideSystemUi() {
+        isSystemUiHidden = true;
         playerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+    }
+
+    private void restoreSystemUi() {
+        if (isSystemUiHidden) {
+            playerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            isSystemUiHidden = false;
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateSystemUi(newConfig);
+    }
+
+    private void updateSystemUi(Configuration config) {
+        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            hideSystemUi();
+        } else {
+            restoreSystemUi();
+        }
     }
 }
