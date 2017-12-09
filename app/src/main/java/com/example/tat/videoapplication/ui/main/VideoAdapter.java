@@ -1,6 +1,7 @@
 package com.example.tat.videoapplication.ui.main;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 .load(video.thumbnailUrl())
                 .into(holder.thumbnail);
         holder.title.setText(video.title());
+        holder.videoDuration.setText(DateUtils.formatElapsedTime(video.videoDuration() / 1000));
+        holder.description.setText(video.description());
         holder.presenterName.setText(video.presenterName());
         holder.video = video;
     }
@@ -63,8 +66,14 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         @BindView(R.id.thumbnail)
         ImageView thumbnail;
 
+        @BindView(R.id.videoDuration)
+        TextView videoDuration;
+
         @BindView(R.id.title)
         TextView title;
+
+        @BindView(R.id.description)
+        TextView description;
 
         @BindView(R.id.presenterName)
         TextView presenterName;
