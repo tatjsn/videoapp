@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.tat.videoapplication.R;
 import com.example.tat.videoapplication.data.model.Video;
@@ -30,10 +31,18 @@ public class PlayerActivity extends AppCompatActivity {
     private int currentWindow;
     private boolean playWhenReady;
     private Video video;
-    private boolean isSystemUiHidden;
 
-    @BindView(R.id.video_view)
+    @BindView(R.id.video)
     SimpleExoPlayerView playerView;
+
+    @BindView(R.id.title)
+    TextView title;
+
+    @BindView(R.id.description)
+    TextView description;
+
+    @BindView(R.id.presenterName)
+    TextView presenterName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +53,9 @@ public class PlayerActivity extends AppCompatActivity {
         video = getIntent().hasExtra("video") ?
                 getIntent().getParcelableExtra("video") : null;
         if (video != null) {
-            getSupportActionBar().setTitle(video.title());
+            title.setText(video.title());
+            description.setText(video.description());
+            presenterName.setText(video.presenterName());
         }
     }
 
@@ -112,8 +123,7 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     @SuppressLint("InlinedApi")
-    private void hideSystemUi() {
-        isSystemUiHidden = true;
+    private void landscapeSystemUi() {
         playerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -122,11 +132,9 @@ public class PlayerActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
     }
 
-    private void restoreSystemUi() {
-        if (isSystemUiHidden) {
-            playerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-            isSystemUiHidden = false;
-        }
+    @SuppressLint("InlinedApi")
+    private void portraitSystemUi() {
+        playerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
     }
 
     @Override
@@ -137,9 +145,9 @@ public class PlayerActivity extends AppCompatActivity {
 
     private void updateSystemUi(Configuration config) {
         if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            hideSystemUi();
+            landscapeSystemUi();
         } else {
-            restoreSystemUi();
+            portraitSystemUi();
         }
     }
 }
