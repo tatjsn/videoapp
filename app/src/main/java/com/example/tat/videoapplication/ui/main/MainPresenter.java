@@ -3,13 +3,19 @@ package com.example.tat.videoapplication.ui.main;
 import android.util.Log;
 
 import com.example.tat.videoapplication.data.DataManager;
+import com.example.tat.videoapplication.data.model.Video;
 import com.example.tat.videoapplication.injection.ConfigPersistent;
 import com.example.tat.videoapplication.ui.base.BasePresenter;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.internal.functions.Functions;
+import io.reactivex.internal.observers.LambdaObserver;
 import io.reactivex.schedulers.Schedulers;
 
 @ConfigPersistent
@@ -57,15 +63,11 @@ public class MainPresenter extends BasePresenter<MainMvpView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(videos -> {
-                    Log.d(TAG, String.format("videos updated %d", videos.size()));
                     if (videos.isEmpty()) {
                         getView().showVideosEmpty();
                     } else {
                         getView().showVideos(videos);
                     }
-                }, exception -> {
-                    Log.e(TAG, exception.getMessage());
-                    getView().showError();
-                });
+                }, exception -> getView().showError());
     }
 }

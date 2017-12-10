@@ -32,6 +32,11 @@ public class DatabaseHelper {
         mDb = briteBuilder.build().wrapDatabaseHelper(dbOpenHelper, scheduler);
     }
 
+    @VisibleForTesting
+    public BriteDatabase getBriteDb() {
+        return mDb;
+    }
+
     public Observable<Video> setVideos(Collection<Video> videos) {
         return Observable.create(emitter -> {
             if (emitter.isDisposed()) {
