@@ -2,6 +2,7 @@ package com.example.tat.videoapplication;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.annotation.VisibleForTesting;
 
 import com.example.tat.videoapplication.injection.component.ApplicationComponent;
 import com.example.tat.videoapplication.injection.component.DaggerApplicationComponent;
@@ -21,5 +22,10 @@ public class VideoApplication extends Application {
                     .build();
         }
         return mApplicationComponent;
+    }
+
+    // For testing
+    public void setComponent(ApplicationComponent applicationComponent) {
+        mApplicationComponent = applicationComponent;
     }
 }
