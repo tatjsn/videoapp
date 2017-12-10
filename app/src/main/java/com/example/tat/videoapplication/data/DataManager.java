@@ -24,10 +24,7 @@ public class DataManager {
 
     public Observable<Video> syncVideos() {
         return mVideoService.getVideos()
-                .concatMap(videos -> {
-                    Observable<Video> result = mDatabaseHelper.setVideos(videos);
-                    return result;
-                });
+                .concatMap(mDatabaseHelper::setVideos);
     }
 
     public Observable<List<Video>> getVideos() {

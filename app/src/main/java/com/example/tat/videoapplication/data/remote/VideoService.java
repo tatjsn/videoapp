@@ -1,7 +1,8 @@
 package com.example.tat.videoapplication.data.remote;
 
+import com.example.tat.videoapplication.BuildConfig;
 import com.example.tat.videoapplication.data.model.Video;
-import com.example.tat.videoapplication.util.MyAdapterFactory;
+import com.example.tat.videoapplication.util.MyTypeAdapterFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -20,18 +21,18 @@ public interface VideoService {
     Observable<List<Video>> getVideos();
 
     class Creator {
-        public static VideoService create() {
+        public static VideoService create(String baseUrl) {
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(interceptor)
                     .build();
             Gson gson = new GsonBuilder()
-                    .registerTypeAdapterFactory(MyAdapterFactory.create())
+                    .registerTypeAdapterFactory(MyTypeAdapterFactory.create())
                     .create();
             Retrofit retrofit = new Retrofit.Builder()
                     .client(client)
-                    .baseUrl("")
+                    .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();

@@ -14,6 +14,7 @@ android {
                 includeCompileClasspath false
             }
         }
+        buildConfigField "String", "VIDEO_API_BASE_URL", "\"${videoApiBaseUrl}\""
     }
     buildTypes {
         release {

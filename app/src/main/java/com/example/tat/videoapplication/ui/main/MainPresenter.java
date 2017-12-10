@@ -3,24 +3,22 @@ package com.example.tat.videoapplication.ui.main;
 import android.util.Log;
 
 import com.example.tat.videoapplication.data.DataManager;
-import com.example.tat.videoapplication.data.model.Video;
 import com.example.tat.videoapplication.injection.ConfigPersistent;
 import com.example.tat.videoapplication.ui.base.BasePresenter;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 @ConfigPersistent
 public class MainPresenter extends BasePresenter<MainMvpView> {
+    private static String TAG = MainPresenter.class.getSimpleName();
+
     private DataManager mDataManager;
-    private Disposable mDisposable;
+    private Disposable mGetDisposable;
+    private Disposable mSyncDisposable;
 
     @Inject
     public MainPresenter(DataManager dataManager) {
@@ -35,66 +33,39 @@ public class MainPresenter extends BasePresenter<MainMvpView> {
     @Override
     public void detachView() {
         super.detachView();
-        if (mDisposable != null) {
-            mDisposable.dispose();
+        if (mSyncDisposable != null) {
+            mSyncDisposable.dispose();
+        }
+        if (mGetDisposable != null) {
+            mGetDisposable.dispose();
         }
     }
 
     public void loadVideos() {
         checkViewAttached();
-        if (mDisposable != null && !mDisposable.isDisposed()) {
-            mDisposable.dispose();
+        if (mSyncDisposable != null && !mSyncDisposable.isDisposed()) {
+            mSyncDisposable.dispose();
         }
-        mDataManager.syncVideos()
+        if (mGetDisposable != null && !mGetDisposable.isDisposed()) {
+            mGetDisposable.dispose();
+        }
+        mSyncDisposable = mDataManager.syncVideos()
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<Video>() { // TODO Empty observer
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        Log.d("tatdbg", "onsubscribe");
-                    }
-
-                    @Override
-                    public void onNext(Video video) {
-                        Log.d("tatdbg", "onnext");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d("tatdbg", "onerror", e);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Log.d("tatdbg", "oncomplete");
-                    }
-                });
-        mDataManager.getVideos()
+                .subscribe(video -> Log.d(TAG, String.format("video synced %s", video.title())),
+                        exception -> Log.e(TAG, exception.getMessage()));
+        mGetDisposable = mDataManager.getVideos()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<List<Video>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        mDisposable = d;
+                .subscribe(videos -> {
+                    Log.d(TAG, String.format("videos updated %d", videos.size()));
+                    if (videos.isEmpty()) {
+                        getView().showVideosEmpty();
+                    } else {
+                        getView().showVideos(videos);
                     }
-
-                    @Override
-                    public void onNext(List<Video> videos) {
-                        if (videos.isEmpty()) {
-                            getView().showVideosEmpty();
-                        } else {
-                            getView().showVideos(videos);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        getView().showError();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        // Do nothing
-                    }
+                }, exception -> {
+                    Log.e(TAG, exception.getMessage());
+                    getView().showError();
                 });
     }
 }

@@ -1,4 +1,4 @@
-package com.example.tat.videoapplication.injection.module;
+package com.example.tat.videoapplication.util;
 
 import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.module.AppGlideModule;
