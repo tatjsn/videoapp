@@ -1,6 +1,5 @@
 package com.example.tat.videoapplication.data.remote;
 
-import com.example.tat.videoapplication.BuildConfig;
 import com.example.tat.videoapplication.data.model.Video;
 import com.example.tat.videoapplication.util.MyTypeAdapterFactory;
 import com.google.gson.Gson;
